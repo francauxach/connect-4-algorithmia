@@ -50,8 +50,10 @@ for (let index = 0; index < maxRowsToSearchDiagonal; index++) {
             arrayValues.push(diagonalValues.join('')[0])
         }
     }
-    
-    diagonalsToBottom.push(arrayValues)
+
+    if (arrayValues.length >= consecutiveOcurrences) {
+        diagonalsToBottom.push(arrayValues)
+    }
 }
 
 for (let index = 1; index < maxColsToSearchDiagonal; index++) {
@@ -69,7 +71,9 @@ for (let index = 1; index < maxColsToSearchDiagonal; index++) {
         }
     }
 
-    diagonalsToRight.push(arrayValues)
+    if (arrayValues.length >= consecutiveOcurrences) {
+        diagonalsToRight.push(arrayValues)
+    }
 }
 
 // Concat both diagonals
