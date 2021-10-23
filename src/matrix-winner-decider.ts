@@ -53,7 +53,8 @@ export function findByDiagonal(matrix, consecutiveOcurrences, reverse = false) {
     return diagonalsToBottom.concat(diagonalsToRight)
 }
 
-export function checkWinner(matrix, players, consecutiveOcurrences) {
+export function checkWinner(matrixRef, players, consecutiveOcurrences) {
+    const matrix: Array<any> = Array.from(matrixRef)
     // Determine if X items consecutively equals horizontally
     const horizontallyMap = findByHorizontal(matrix, players, consecutiveOcurrences)
     // console.log(horizontallyMap)

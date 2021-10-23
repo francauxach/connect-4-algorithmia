@@ -1,6 +1,6 @@
 {
   "name": "matrix-winner-decider",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Library to determine if there's a winner in a matrix by searching the columns, the rows and the diagonals.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
