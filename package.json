@@ -1,0 +1,33 @@
+{
+  "name": "matrix-winner-decider",
+  "version": "1.0.0",
+  "description": "A Library to determine if there's a winner in a matrix by searching the columns, the rows and the diagonals.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "demo": "ts-node demo/index.ts",
+    "build": "tsc",
+    "publish": "npm run build && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/francauxach/matrix-winner-decider.git"
+  },
+  "keywords": [],
+  "author": "Franc Auxach Cortés <francauxach@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/francauxach/matrix-winner-decider/issues"
+  },
+  "homepage": "https://github.com/francauxach/matrix-winner-decider#readme",
+  "devDependencies": {
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "ts-node": "^10.4.0"
+  }
+}
