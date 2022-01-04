@@ -1,17 +1,22 @@
 {
   "name": "matrix-winner-decider",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A Library to determine if there's a winner in a matrix by searching the columns, the rows and the diagonals.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "files": [
-    "/dist"
+    "dist"
   ],
+  "main": "./dist/matrix-winner-decider.umd.js",
+  "module": "./dist/matrix-winner-decider.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/matrix-winner-decider.es.js",
+      "require": "./dist/matrix-winner-decider.umd.js"
+    }
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "demo": "ts-node demo/index.ts",
-    "build": "tsc",
-    "publish": "npm run build && npm publish"
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
   },
   "repository": {
     "type": "git",
@@ -24,10 +29,17 @@
     "url": "https://github.com/francauxach/matrix-winner-decider/issues"
   },
   "homepage": "https://github.com/francauxach/matrix-winner-decider#readme",
-  "devDependencies": {
-    "typescript": "^4.4.4"
-  },
   "dependencies": {
-    "ts-node": "^10.4.0"
+    "vue": "^3.2.25"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.2",
+    "@vitejs/plugin-vue": "^2.0.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.5",
+    "tailwindcss": "^3.0.7",
+    "typescript": "^4.4.4",
+    "vite": "^2.7.2",
+    "vue-tsc": "^0.29.8"
   }
 }

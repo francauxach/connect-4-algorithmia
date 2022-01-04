@@ -35,7 +35,7 @@ export function findByDiagonal(matrix, consecutiveOcurrences, reverse = false) {
 
         for (let indexRows = 0; indexRows < rows; indexRows++) {
             const diagonalValues = []
-        
+
             for (let indexCols = (indexRows + index); indexCols < cols; indexCols++) {
                 diagonalValues.push(matrix[indexRows][indexCols])
             }
@@ -80,21 +80,21 @@ export function checkWinner(matrixRef, players, consecutiveOcurrences) {
         // Concat both diagonals
         const diagonalsMatrix = findByDiagonal(matrix, consecutiveOcurrences)
         // console.table(diagonalsMatrix)
-    
+
         // Result
         const diagonallyMap = findByHorizontal(diagonalsMatrix, players, consecutiveOcurrences)
         // console.log('diagonal', diagonallyMap)
         if (diagonallyMap.some((item) => item === true)) {
             return true
         }
-    
+
         // Determine if X items consecutively equals diagonally (from left to right -> top)
         const reversedMatrix = matrix.reverse()
         const reversedDiagonalsMatrix = findByDiagonal(reversedMatrix, consecutiveOcurrences, true)
         // console.table(reversedDiagonalsMatrix)
         const reversedDiagonallyMap = findByHorizontal(reversedDiagonalsMatrix, players, consecutiveOcurrences)
         // console.log('reverseDiagonal', reversedDiagonallyMap)
-    
+
         if (reversedDiagonallyMap.some((item) => item === true)) {
             return true
         }
