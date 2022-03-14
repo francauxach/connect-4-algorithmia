@@ -1,6 +1,6 @@
 {
   "name": "matrix-winner-decider",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "A Library to determine if there's a winner in a matrix by searching the columns, the rows and the diagonals.",
   "files": [
     "dist"
@@ -16,7 +16,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "repository": {
     "type": "git",
@@ -36,10 +38,12 @@
     "@types/node": "^17.0.2",
     "@vitejs/plugin-vue": "^2.0.0",
     "autoprefixer": "^10.4.0",
+    "c8": "^7.11.0",
     "postcss": "^8.4.5",
     "tailwindcss": "^3.0.7",
     "typescript": "^4.4.4",
     "vite": "^2.7.2",
+    "vitest": "^0.6.0",
     "vue-tsc": "^0.29.8"
   }
 }

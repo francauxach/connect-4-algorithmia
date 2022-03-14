@@ -1,102 +1,109 @@
-export function findByHorizontal(matrix, players, consecutiveOcurrences) {
-    return matrix.map((col) => col.join(undefined).includes([...Array(consecutiveOcurrences)].map(() => players[0]).join(undefined)) || col.join(undefined).includes([...Array(consecutiveOcurrences)].map(() => players[1]).join(undefined)))
+export function findByHorizontal(matrix, players, consecutiveOcurrences, direction = 'horizontal') {
+    let result = undefined
+
+    for (let index = 0; index < matrix.length; index++) {
+        const col = matrix[index]
+
+        for (let indexPlayers = 0; indexPlayers < players.length; indexPlayers++) {
+            const player = players[indexPlayers]
+
+            if (col.join(undefined).includes([...Array(consecutiveOcurrences)].map(() => player).join(undefined))) {
+                const winnerArrayIndex = col.map((cell, index) => {
+                    return col.slice(index, consecutiveOcurrences + index).join(undefined) === [...Array(consecutiveOcurrences)].map(() => player).join(undefined)
+                }).indexOf(true)
+
+                result = col.map((cell, mapIndex) => {
+                    let position = []
+
+                    switch (direction) {
+                        case 'vertical':
+                            position = [mapIndex, matrix.indexOf(col)]
+                            break
+                        case 'horizontal':
+                            position = [matrix.indexOf(col), mapIndex]
+                        default:
+                            break
+                    }
+
+                    return cell && cell === player && (mapIndex >= winnerArrayIndex && mapIndex < consecutiveOcurrences + winnerArrayIndex) ? position : false
+                }).filter(Boolean)
+
+                result.length = consecutiveOcurrences
+                break
+            }
+        }
+
+        if (result) {
+            break
+        }
+    }
+
+    return result ?? false
 }
 
-export function findByDiagonal(matrix, consecutiveOcurrences, reverse = false) {
-    const cols = matrix[0].length
-    const rows = matrix.length
-    const maxColsToSearchDiagonal = cols === consecutiveOcurrences ? 1 : consecutiveOcurrences % cols
-    const maxRowsToSearchDiagonal = rows === consecutiveOcurrences ? 1 : consecutiveOcurrences % rows
-    const diagonalsToBottom = []
-    const diagonalsToRight = []
+export function findByDiagonal(matrix, players, consecutiveOcurrences, reverse = false) {
+    let result = undefined
+    const flatMatrix = matrix.flatMap(row => row)
+    const winnerCellsGap = matrix[0].length + (reverse ? -1 : 1)
 
-    for (let index = 0; index < maxRowsToSearchDiagonal; index++) {
-        const arrayValues = []
+    for (let indexPlayer = 0; indexPlayer < players.length; indexPlayer++) {
+        const player = players[indexPlayer];
 
-        for (let indexRows = index; indexRows < rows; indexRows++) {
-            const diagonalValues = []
+        for (let index = 0; index < flatMatrix.length; index++) {
+            const possibleDiagonalPositions = [...Array(consecutiveOcurrences).keys()].map((key) => (key * winnerCellsGap) + index)
+            const hasCorrectDiagonalPosition = possibleDiagonalPositions.every((value) => value < (matrix.length * matrix[0].length) && flatMatrix[value] === player)
 
-            for (let indexCols = (indexRows - index); indexCols < cols; indexCols++) {
-                diagonalValues.push(matrix[indexRows][indexCols])
-            }
+            const possibleDiagonalColumns = possibleDiagonalPositions.map((value) => Math.floor(value / matrix[0].length))
+            const hasCorrectDiagonalColumns = possibleDiagonalColumns.every((v, i) => i === 0 || v === possibleDiagonalColumns[i - 1] + 1)
 
-            if (diagonalValues.length) {
-                arrayValues.push(diagonalValues.join(undefined)[0])
+            if (hasCorrectDiagonalPosition && hasCorrectDiagonalColumns) {
+                result = possibleDiagonalPositions.map((value) => [Math.floor(value / matrix[0].length), value % matrix[0].length])
+                break
             }
         }
 
-        if (arrayValues.length >= consecutiveOcurrences) {
-            diagonalsToBottom.push(arrayValues)
+        if (result) {
+            break
         }
     }
 
-    for (let index = 1; index < maxColsToSearchDiagonal; index++) {
-        const arrayValues = []
-
-        for (let indexRows = 0; indexRows < rows; indexRows++) {
-            const diagonalValues = []
-
-            for (let indexCols = (indexRows + index); indexCols < cols; indexCols++) {
-                diagonalValues.push(matrix[indexRows][indexCols])
-            }
-
-            if (diagonalValues.length) {
-                arrayValues.push(diagonalValues.join(undefined)[0])
-            }
-        }
-
-        if (arrayValues.length >= consecutiveOcurrences) {
-            diagonalsToRight.push(arrayValues)
-        }
-    }
-
-    return diagonalsToBottom.concat(diagonalsToRight)
+    return result ?? false
 }
 
 export function checkWinner(matrixRef, players, consecutiveOcurrences) {
     const matrix: Array<any> = Array.from(matrixRef)
-    // Determine if X items consecutively equals horizontally
+    let winnerFound = []
+
     if (matrix[0].length >= consecutiveOcurrences) {
-        const horizontallyMap = findByHorizontal(matrix, players, consecutiveOcurrences)
-        // console.log('horizontal', horizontallyMap)
-        if (horizontallyMap.some((item) => item === true)) {
-            return true
-        }
-    }
+        // Determine if X items consecutively equals horizontally
+        winnerFound = findByHorizontal(matrix, players, consecutiveOcurrences)
 
-    // Determine if X items consecutively equals vertically (transposing the matrix)
-    if (matrix.length >= consecutiveOcurrences) {
+        if (winnerFound.length) {
+            return winnerFound
+        }
+
+        // Determine if X items consecutively equals vertically (transposing the matrix)
         const transposedMatrix = matrix[0].map((item, index) => matrix.map(item => item[index]))
-        const verticallyMap = findByHorizontal(transposedMatrix, players, consecutiveOcurrences)
-        // console.log('vertical', verticallyMap)
-        if (verticallyMap.some((item) => item === true)) {
-            return true
-        }
-    }
+        winnerFound = findByHorizontal(transposedMatrix, players, consecutiveOcurrences, 'vertical')
 
-    // Determine if X items consecutively equals diagonally (from left to right -> bottom)
-    if (matrix.length >= consecutiveOcurrences && matrix[0].length >= consecutiveOcurrences) {
-        // Discard some diagonals by consecutiveOcurrences number
-        // Concat both diagonals
-        const diagonalsMatrix = findByDiagonal(matrix, consecutiveOcurrences)
-        // console.table(diagonalsMatrix)
-
-        // Result
-        const diagonallyMap = findByHorizontal(diagonalsMatrix, players, consecutiveOcurrences)
-        // console.log('diagonal', diagonallyMap)
-        if (diagonallyMap.some((item) => item === true)) {
-            return true
+        if (winnerFound.length) {
+            return winnerFound
         }
 
-        // Determine if X items consecutively equals diagonally (from left to right -> top)
-        const reversedMatrix = matrix.reverse()
-        const reversedDiagonalsMatrix = findByDiagonal(reversedMatrix, consecutiveOcurrences, true)
-        // console.table(reversedDiagonalsMatrix)
-        const reversedDiagonallyMap = findByHorizontal(reversedDiagonalsMatrix, players, consecutiveOcurrences)
-        // console.log('reverseDiagonal', reversedDiagonallyMap)
+        if (matrix[0].length >= consecutiveOcurrences) {
+            // Determine if X items consecutively equals diagonally (from left to right -> bottom)
+            winnerFound = findByDiagonal(matrix, players, consecutiveOcurrences)
 
-        if (reversedDiagonallyMap.some((item) => item === true)) {
-            return true
+            if (winnerFound.length) {
+                return winnerFound
+            }
+
+            // Determine if X items consecutively equals diagonally (from left to right -> top)
+            winnerFound = findByDiagonal(matrix, players, consecutiveOcurrences, true)
+
+            if (winnerFound.length) {
+                return winnerFound
+            }
         }
     }
 
